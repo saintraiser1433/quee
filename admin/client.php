@@ -1,6 +1,8 @@
 <?php
 include '../drivers/connection.php';
-
+// if (!isset($_SESSION['ad_id'])) {
+//   header("Location:index.php");
+// }
 
 ?>
 
@@ -9,80 +11,92 @@ include '../drivers/connection.php';
 <?php include '../static/nav/head.php' ?>
 
 <body>
+  <script src="../dist/js/demo-theme.min.js?1684106062"></script>
   <div class="page">
     <!-- Navbar -->
     <?php include '../static/nav/topbar.php' ?>
+    <?php include '../static/nav/navbar.php' ?>
     <div class="page-wrapper">
       <!-- Page header -->
+      <div class="page-header d-print-none">
+        <div class="container-xl">
+          <div class="row g-2 align-items-center">
+            <div class="col">
+              <h2 class="page-title">List of Services</h2>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- Page body -->
       <div class="page-body">
         <div class="container-xl">
           <div class="card">
             <div class="card-body">
-              <div class="d-flex justify-content-center">
-                <h1>LOREM IPSUM COMPANY</h1>
+              <div id="listjs">
+                <div class="d-flex align-items-center justify-content-between">
+                  <button type="button" class="btn btn-primary add">Add</button>
+                  <div class="flex-shrink-0">
+                    <input class="form-control listjs-search" id="search-input" placeholder="Search" style="max-width: 200px;" />
+                  </div>
+                </div>
+                <br>
+                <div id="pagination-container"></div>
+                <div id="table-default" class="table-responsive">
+                  <table class="table" id="tables">
+                    <thead>
+                      <tr>
+                        <th>
+                          <button class="table-sort" data-sort="sort-id">
+                            #
+                          </button>
+                        </th>
+                        <th>
+                          <button class="table-sort" data-sort="sort-name">
+                            Icon
+                          </button>
+                        </th>
+                        <th>
+                          <button class="table-sort" data-sort="sort-name">
+                            Services Description
+                          </button>
+                        </th>
+                        <th>
+                          <button class="table-sort" data-sort="sort-dob">
+                            Status
+                          </button>
+                        </th>
+                        <th>
+                          <button class="table-sort">
+                            Action
+                          </button>
+                        </th>
+
+                      </tr>
+                    </thead>
+                    <tbody class="table-tbody">
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <br>
+                  <div class="btn-toolbar">
+                    <p class="mb-0" id="listjs-showing-items-label">Showing 0 items</p>
+                    <ul class="pagination ms-auto mb-0"></ul>
+                  </div>
+                </div>
+
               </div>
-              <div class="row">
-                <div class="col-lg-3 pb-2">
-                    
-                  <div class="card card-link card-link-pop" style="cursor:pointer">
-                    <div class="card-status-bottom bg-success"></div>
-                    <!-- Photo -->
-                    <div class="img-responsive img-responsive-16x9 card-img-top" style="background-image: url('../static/images/menu/x.jpeg')"></div>
-                    <div class="card-body">
-                      <span class="text-capitalize fw-bolder asname">TEST</span>
-                      <p class="text-muted asdes">TEST</p>
-
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-3 pb-2">
-
-                  <div class="card card-link card-link-pop" style="cursor:pointer">
-                    <div class="card-status-bottom bg-success"></div>
-                    <!-- Photo -->
-                    <div class="img-responsive img-responsive-16x9 card-img-top" style="background-image: url('../static/images/menu/x.jpeg')"></div>
-                    <div class="card-body">
-                      <span class="text-capitalize fw-bolder asname">TEST</span>
-                      <p class="text-muted asdes">TEST</p>
-
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-3 pb-2">
-
-                  <div class="card card-link card-link-pop" style="cursor:pointer">
-                    <div class="card-status-bottom bg-success"></div>
-                    <!-- Photo -->
-                    <div class="img-responsive img-responsive-16x9 card-img-top" style="background-image: url('../static/images/menu/x.jpeg')"></div>
-                    <div class="card-body">
-                      <span class="text-capitalize fw-bolder asname">TEST</span>
-                      <p class="text-muted asdes">TEST</p>
-
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-3 pb-2">
-
-                  <div class="card card-link card-link-pop" style="cursor:pointer">
-                    <div class="card-status-bottom bg-success"></div>
-                    <!-- Photo -->
-                    <div class="img-responsive img-responsive-16x9 card-img-top" style="background-image: url('../static/images/menu/x.jpeg')"></div>
-                    <div class="card-body">
-                      <span class="text-capitalize fw-bolder asname">TEST</span>
-                      <p class="text-muted asdes">TEST</p>
-
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
             </div>
           </div>
         </div>
       </div>
       <?php include '../static/nav/footer.php'; ?>
+      <?php include '../static/components/modal.php'; ?>
     </div>
   </div>
 

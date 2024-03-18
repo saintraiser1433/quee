@@ -7,9 +7,9 @@ include '../drivers/connection.php';
 <html lang="en">
 <?php include '../static/nav/head.php' ?>
 
-<body>
-  <div class="card theme-color">
-    <div class="card-body">
+<body class="theme-color">
+  <div class="card theme-color mx-auto my-auto">
+    <div class="card-body theme-color">
       <div class="row">
         <div class="col-lg-2">
           <div class="mb-3 text-center">
@@ -99,7 +99,7 @@ include '../drivers/connection.php';
                 <h1><img src="../static/images/sun.png"> Sunday</h1>
                 <h1><img src="../static/images/clock.png"> 12:34 PM</h1>
               </div>
-              <div class="h-100">
+              <div>
                 <video controls loop>
                   <source src="../static/video/video1.mp4" type="video/mp4">
                 </video>
@@ -142,13 +142,14 @@ include '../drivers/connection.php';
   }
 
   video {
-    border:5px solid gray;
-    width:100%;
-    height:100%;
+    border: 5px solid gray;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     position: relative;
   }
-  .theme-color{
+
+  .theme-color {
     background-color: #F4F3F2;
   }
 </style>

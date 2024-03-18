@@ -1,8 +1,8 @@
 <?php
 include '../drivers/connection.php';
-if (!isset($_SESSION['ad_id'])) {
-  header("Location:index.php");
-}
+// if (!isset($_SESSION['ad_id'])) {
+//   header("Location:index.php");
+// }
 $date = date('Y');
 $sql = "SELECT COUNT(*) AS cnt,MONTHNAME(date_borrow) as borrow from return_asset where YEAR(date_borrow)='$date'";
 $rs = $conn->query($sql);

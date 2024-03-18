@@ -1,9 +1,8 @@
 <?php
 include '../drivers/connection.php';
-include 'dist/libs/qr/qrlib.php';
-if (!isset($_SESSION['ad_id'])) {
-  header("Location:index.php");
-}
+// if (!isset($_SESSION['ad_id'])) {
+//   header("Location:index.php");
+// }
 
 ?>
 
@@ -322,10 +321,72 @@ if (!isset($_SESSION['ad_id'])) {
 
       });
 
+
+      $(document).on('click', '#submit', function(e) {
+        e.preventDefault();
+        var fileInput = document.getElementById('filer_input_single');
+        var formData = new FormData();
+        formData.append('itemCode', $('#itemCode').val());
+        formData.append('itemName', $('#itemName').val());
+        formData.append('itemDescription', $('#itemDescription').val());
+        formData.append('itemCategory', $('#itemCategory').val());
+        formData.append('itemSize', $('#itemSize').val());
+        formData.append('files', fileInput.files[0]);
+        if (id === null) {
+          formData.append('action', 'ADD');
+        } else {
+          formData.append('action', 'UPDATE');
+        }
+        swal({
+            title: "Are you sure?",
+            text: "You want to add this data?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((isConfirm) => {
+            if (isConfirm) {
+              if (id === null) {
+                $.ajax({
+                  method: "POST",
+                  url: "../ajax/service.php",
+                  data: formData,
+                  processData: false,
+                  contentType: false,
+                  cache: false,
+                  success: function(html) {
+                    swal("Success", {
+                      icon: "success",
+                    }).then((value) => {
+                      location.reload();
+                    });
+                  }
+                });
+              } else {
+                $.ajax({
+                  method: "POST",
+                  url: "../ajax/service.php",
+                  data: formData,
+                  processData: false,
+                  contentType: false,
+                  cache: false,
+                  success: function(html) {
+                    swal("Success", {
+                      icon: "success",
+                    }).then((value) => {
+                      location.reload();
+                    });
+                  }
+                });
+              }
+            }
+          });
+      });
+
       $(document).on('click', '.delete', function(e) {
         e.preventDefault();
         var currentRow = $(this).closest("tr");
-        var col1 = currentRow.find("td:eq(0)").text();
+        var col1 = currentRow.find("td:eq(6)").text();
         swal({
             title: "Are you sure?",
             text: "Once deleted, you will not be able to recover this imaginary file!",
@@ -337,11 +398,9 @@ if (!isset($_SESSION['ad_id'])) {
             if (willDelete) {
               $.ajax({
                 method: "POST",
-                url: "static/ajax/delete.php",
+                url: "../ajax/service.php",
                 data: {
-                  myids: col1,
-                  table: 'asset',
-                  key: 'asset_code'
+                  serviceId: col1,
                 },
                 success: function(html) {
                   swal("Poof! Your imaginary file has been deleted!", {
