@@ -58,6 +58,11 @@ include '../drivers/connection.php';
                           </button>
                         </th>
                         <th>
+                          <button class="table-sort" data-sort="sort-dob">
+                            Services Assigned
+                          </button>
+                        </th>
+                        <th>
                           <button class="table-sort">
                             Action
                           </button>
@@ -83,6 +88,16 @@ include '../drivers/connection.php';
                               echo '<span class="badge badge-sm bg-red text-uppercase ms-auto text-white">Inactive</span>';
                             }
                             ?>
+                          </td>
+                          <td>
+                            <a href="#" class="badge bg-info view">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                                <path d="M6 21v-2a4 4 0 0 1 4 -4h3.5" />
+                                <path d="M18.42 15.61a2.1 2.1 0 0 1 2.97 2.97l-3.39 3.42h-3v-3l3.42 -3.39z" />
+                              </svg>
+                            </a>
                           </td>
                           <td>
                             <a href="#" class="badge bg-yellow edit">
@@ -124,6 +139,7 @@ include '../drivers/connection.php';
       </div>
       <?php include '../static/nav/footer.php'; ?>
       <?php include '../static/components/modal.php'; ?>
+
     </div>
   </div>
 
@@ -150,6 +166,31 @@ include '../drivers/connection.php';
   ?>
 
   <script>
+    // @formatter:off
+      document.addEventListener("DOMContentLoaded", function() {
+        var el;
+        window.TomSelect && (new TomSelect(el = document.getElementById('select-states'), {
+          copyClassesToDropdown: false,
+          // dropdownParent: 'body',
+          controlInput: '<input>',
+          render: {
+            item: function(data, escape) {
+              if (data.customProperties) {
+                return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+              }
+              return '<div>' + escape(data.text) + '</div>';
+            },
+            option: function(data, escape) {
+              if (data.customProperties) {
+                return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+              }
+              return '<div>' + escape(data.text) + '</div>';
+            },
+          },
+        }));
+      });
+    // @formatter:on
+
     $(document).ready(function() {
       let id = null;
 
@@ -186,10 +227,14 @@ include '../drivers/connection.php';
 
 
       $(document).on('click', '.add', function() {
-        $('#modal-typeclients').modal('show');
-        $('.modal-title').html('Insert Type Client');
+        $('#modal-user').modal('show');
+        $('.modal-title').html('Insert User & Services');
         id = null;
         $('.my-switch').css('display', 'none');
+      });
+
+      $(document).on('click', '.view', function() {
+        $('#modal-user-service').modal('show');
       });
 
       $(document).on('click', '.delete', function(e) {

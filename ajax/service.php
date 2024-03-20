@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
     } else {
         $pth = $uploadsDir . $photo . ".png";
         $dir = $photo . ".png";
-        move_uploaded_file($_FILES['files']['tmp_name'], $pth);
+
         $isImgUpdate = true;
     }
     if ($action == 'ADD') {
@@ -27,6 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
         ) 
         VALUES ('$servicetitle','$servicedescription','$dir')";
         $conn->query($sql);
+        move_uploaded_file($_FILES['files']['tmp_name'], $pth);
     } else if ($action == 'UPDATE') {
         if ($isImgUpdate) {
             $sql = "UPDATE services SET 
@@ -35,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
             status = $servicestatus,
             image = '$dir'
             WHERE services_id=$serviceId";
+            move_uploaded_file($_FILES['files']['tmp_name'], $pth);
         } else {
             $sql = "UPDATE services SET 
             service_title = '$servicetitle',
