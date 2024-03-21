@@ -126,7 +126,6 @@ include '../drivers/connection.php';
                     <ul class="pagination ms-auto mb-0"></ul>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
@@ -188,7 +187,7 @@ include '../drivers/connection.php';
           method: "GET",
           url: "../ajax/service.php",
           data: {
-            action:'sds',
+            action: 'sds',
             serviceId: id,
           },
           dataType: 'json',

@@ -314,3 +314,37 @@
           </div>
       </div>
   </div>
+
+
+  <!-- modal for get ticket -->
+  <div class="modal modal-blur fade" id="modal-ticket" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">Ticket Details</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="" method="post" enctype="multipart/form-data">
+                  <div class="modal-body">
+                      <div class="d-flex flex-column align-items-center">
+                          <h1 class="text-center">YOUR TICKET NUMBER</h1>
+                          <div class="ticketFont">#1001
+                          <hr>
+                          </div>
+                         
+                          <button type="button" class="btn btn-success print">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-right">
+                                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                  <path d="M7 7l5 5l-5 5" />
+                                  <path d="M13 7l5 5l-5 5" />
+                              </svg>
+                              PRINT</button>
+                      </div>
+
+                  </div>
+          </div>
+
+          </form>
+      </div>
+  </div>
+  </div>
