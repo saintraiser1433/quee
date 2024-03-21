@@ -12,14 +12,14 @@ include '../drivers/connection.php';
   <div class="page">
     <!-- Navbar -->
     <?php include '../static/nav/topbar.php' ?>
-    <?php include '../static/nav/navbar.php' ?>
+    <?php include '../static/nav/navbar-personnel.php' ?>
     <div class="page-wrapper">
       <!-- Page header -->
       <div class="page-header d-print-none">
         <div class="container-xl">
           <div class="row g-2 align-items-center">
             <div class="col">
-              <h2 class="page-title">Clients Type</h2>
+              <h2 class="page-title">Assigned Services</h2>
             </div>
           </div>
         </div>
@@ -30,13 +30,7 @@ include '../drivers/connection.php';
           <div class="card">
             <div class="card-body">
               <div id="listjs">
-                <div class="d-flex align-items-center justify-content-between">
-                  <button type="button" class="btn btn-primary add">Add</button>
-                  <div class="flex-shrink-0">
-                    <input class="form-control listjs-search" id="search-input" placeholder="Search" style="max-width: 200px;" />
-                  </div>
-                </div>
-                <br>
+
                 <div id="pagination-container"></div>
                 <div id="table-default" class="table-responsive">
                   <table class="table" id="tables">
@@ -48,63 +42,29 @@ include '../drivers/connection.php';
                           </button>
                         </th>
                         <th>
-                          <button class="table-sort" data-sort="sort-name">
-                            Client Description
+                          <button class="table-sort" data-sort="sort-id">
+                            Service Title
                           </button>
                         </th>
                         <th>
-                          <button class="table-sort" data-sort="sort-dob">
-                            Status
+                          <button class="table-sort" data-sort="sort-id">
+                            Service Description
                           </button>
                         </th>
-                        <th>
-                          <button class="table-sort">
-                            Action
-                          </button>
-                        </th>
-                        <th class="d-none"></th>
                       </tr>
                     </thead>
                     <tbody class="table-tbody">
 
                       <?php
-                      $sql = "SELECT * FROM type_clients";
+                      $sql = "SELECT b.service_title,b.service_description FROM assign_service a INNER JOIN services b ON a.service_id=b.services_id where a.user_id=2";
                       $rs = $conn->query($sql);
                       $i = 1;
                       foreach ($rs as $rows) { ?>
                         <tr>
                           <td><?php echo $i++; ?></td>
-                          <td><?php echo $rows['client_description'] ?></td>
-                          <td>
-                            <?php
-                            if ($rows['status'] == 1) {
-                              echo '<span class="badge badge-sm bg-green text-uppercase ms-auto text-white">Active</span>';
-                            } else if ($rows['status'] == 0) {
-                              echo '<span class="badge badge-sm bg-red text-uppercase ms-auto text-white">Inactive</span>';
-                            }
-                            ?>
-                          </td>
-                          <td>
-                            <a href="#" class="badge bg-yellow edit">
-                              <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                                <path d="M6 21v-2a4 4 0 0 1 4 -4h3.5" />
-                                <path d="M18.42 15.61a2.1 2.1 0 0 1 2.97 2.97l-3.39 3.42h-3v-3l3.42 -3.39z" />
-                              </svg>
+                          <td><?php echo $rows['service_title'] ?></td>
+                          <td><?php echo $rows['service_description'] ?></td>
 
-                            </a> |
-                            <a href="#" class="badge bg-red delete">
-                              <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M4 7h16" />
-                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                <path d="M10 12l4 4m0 -4l-4 4" />
-                              </svg>
-                            </a>
-                          </td>
-                          <td class="d-none"><?php echo $rows['client_id'] ?></td>
                         </tr>
                       <?php } ?>
 
@@ -150,23 +110,36 @@ include '../drivers/connection.php';
   ?>
 
   <script>
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $('#ImgID').attr('src', e.target.result);
+
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
     $(document).ready(function() {
       let id = null;
-
+      $(document).on('click', '#upload', function() {
+        $('#filer_input_single').click();
+      });
 
       $(document).on('click', '.edit', function() {
-        $('#modal-typeclients').modal('show');
+        $('#modal-service').modal('show');
         $tr = $(this).closest('tr');
         var data = $tr.children("td").map(function() {
           return $(this).text();
         }).get();
-        id = data[4];
+        id = data[6];
 
         $.ajax({
           method: "GET",
-          url: "../ajax/typeclients.php",
+          url: "../ajax/service.php",
           data: {
-            clientId: id,
+            action: 'sds',
+            serviceId: id,
           },
           dataType: 'json',
           success: function(res) {
@@ -177,17 +150,20 @@ include '../drivers/connection.php';
               stat = ''
             }
             $('.my-switch').css('display', 'block');
-            $('#clientdescription').val(html.client_description);
-            $('#clientstatus').prop('checked', stat);
+            $('#ImgID').attr('src', '../static/images/menu/' + html.image);
+            $('#servicetitle').val(html.service_title);
+            $('#servicedescription').val(html.service_description);
+            $('#servicestatus').prop('checked', stat);
           }
+
         });
-        $('.modal-title').html('Update Type Client');
+        $('.modal-title').html('Update Service');
       });
 
 
       $(document).on('click', '.add', function() {
-        $('#modal-typeclients').modal('show');
-        $('.modal-title').html('Insert Type Client');
+        $('#modal-service').modal('show');
+        $('.modal-title').html('Insert Services');
         id = null;
         $('.my-switch').css('display', 'none');
       });
@@ -195,7 +171,7 @@ include '../drivers/connection.php';
       $(document).on('click', '.delete', function(e) {
         e.preventDefault();
         var currentRow = $(this).closest("tr");
-        var col1 = currentRow.find("td:eq(4)").text();
+        var col1 = currentRow.find("td:eq(6)").text();
         swal({
             title: "Are you sure?",
             text: "Once deleted, you will not be able to recover this imaginary file!",
@@ -207,9 +183,9 @@ include '../drivers/connection.php';
             if (willDelete) {
               $.ajax({
                 method: "POST",
-                url: "../ajax/typeclients.php",
+                url: "../ajax/service.php",
                 data: {
-                  clientId: col1,
+                  serviceId: col1,
                   action: 'DELETE'
                 },
                 success: function(html) {
@@ -229,26 +205,29 @@ include '../drivers/connection.php';
       });
 
 
-      $(document).on('click', '#submitypeclient', function(e) {
+      $(document).on('click', '#submitservice', function(e) {
         e.preventDefault();
+        var fileInput = document.getElementById('filer_input_single');
         var formData = new FormData();
         let text = null;
-        let action = null;
-        var status = $('#clientstatus').prop('checked');
+        var status = $('#servicestatus').prop('checked');
         if (status) {
           checkStatus = 1;
         } else {
           checkStatus = 0;
         }
-        let clientdescription = $('#clientdescription').val();
-
+        formData.append('serviceId', id);
+        formData.append('servicetitle', $('#servicetitle').val());
+        formData.append('servicedescription', $('#servicedescription').val());
+        formData.append('servicestatus', checkStatus);
+        formData.append('files', fileInput.files[0]);
         if (id === null) {
-          action = "ADD";
-          text = "You want to add this type client?";
+          formData.append('action', 'ADD');
+          text = "You want to add this service?";
 
         } else {
-          action = "UPDATE";
-          text = "You want to update this type client?";
+          formData.append('action', 'UPDATE');
+          text = "You want to update this service?";
         }
         swal({
             title: "Are you sure?",
@@ -262,12 +241,11 @@ include '../drivers/connection.php';
               if (id === null) {
                 $.ajax({
                   method: "POST",
-                  url: "../ajax/typeclients.php",
-                  data: {
-                    clientId: id,
-                    clientdescription: clientdescription,
-                    action: action
-                  },
+                  url: "../ajax/service.php",
+                  data: formData,
+                  processData: false,
+                  contentType: false,
+                  cache: false,
                   success: function(html) {
                     swal("Success", {
                       icon: "success",
@@ -279,13 +257,11 @@ include '../drivers/connection.php';
               } else {
                 $.ajax({
                   method: "POST",
-                  url: "../ajax/typeclients.php",
-                  data: {
-                    clientId: id,
-                    clientdescription: clientdescription,
-                    clientstatus: checkStatus,
-                    action: action
-                  },
+                  url: "../ajax/service.php",
+                  data: formData,
+                  processData: false,
+                  contentType: false,
+                  cache: false,
                   success: function(html) {
                     swal("Success", {
                       icon: "success",

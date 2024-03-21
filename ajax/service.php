@@ -52,20 +52,65 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
         $sql = $conn->query($sql);
     }
 } else if ($_SERVER["REQUEST_METHOD"] == 'GET') {
-    $serviceIds = $_GET['serviceId'];
-    $sql = "SELECT * FROM services WHERE services_id = $serviceIds";
-    $rs = $conn->query($sql);
-    $data = [];
-    if ($rs) {
-        while ($row = $rs->fetch_assoc()) {
-            $data[] = [
-                'services_id' => $row['services_id'],
-                'service_title' => $row['service_title'],
-                'service_description' => $row['service_description'],
-                'image' => $row['image'],
-                'status' => $row['status'],
-            ];
+    $serviceIds = @$_GET['serviceId'];
+    $userId = @$_GET['userId'];
+    $action = @$_GET['action'];
+    if ($action == 'ADD') {
+        $data = [];
+        $sql = "SELECT services_id,service_title
+                FROM
+                    services
+                WHERE
+                    services_id NOT IN(
+                    SELECT
+                        service_id
+                    FROM
+                        assign_service
+                ) AND
+                STATUS = 1";
+        $rs = $conn->query($sql);
+        if ($rs) {
+            while ($row = $rs->fetch_assoc()) {
+                $data[] = [
+                    'services_id' => $row['services_id'],
+                    'service_title' => $row['service_title'],
+                ];
+            }
         }
+        echo json_encode($data);
+    } else if ($action == 'EDIT') {
+        $data = [];
+        $sql = "SELECT services_id,service_title
+                FROM
+                    services
+                WHERE
+                STATUS = 1";
+        $rs = $conn->query($sql);
+        if ($rs) {
+            while ($row = $rs->fetch_assoc()) {
+                $data[] = [
+                    'services_id' => $row['services_id'],
+                    'service_title' => $row['service_title'],
+                ];
+            }
+        }
+        echo json_encode($data);
+    } else {
+
+        $sql = "SELECT * FROM services WHERE services_id = $serviceIds";
+        $rs = $conn->query($sql);
+        $data = [];
+        if ($rs) {
+            while ($row = $rs->fetch_assoc()) {
+                $data[] = [
+                    'services_id' => $row['services_id'],
+                    'service_title' => $row['service_title'],
+                    'service_description' => $row['service_description'],
+                    'image' => $row['image'],
+                    'status' => $row['status'],
+                ];
+            }
+        }
+        echo json_encode($data);
     }
-    echo json_encode($data);
 }

@@ -188,6 +188,7 @@ include '../drivers/connection.php';
           method: "GET",
           url: "../ajax/service.php",
           data: {
+            action:'sds',
             serviceId: id,
           },
           dataType: 'json',
