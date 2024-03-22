@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Mar 21, 2024 at 11:52 AM
+-- Generation Time: Mar 22, 2024 at 11:55 AM
 -- Server version: 8.2.0
 -- PHP Version: 8.2.13
 
@@ -40,7 +40,8 @@ CREATE TABLE IF NOT EXISTS `assign_service` (
 --
 
 INSERT INTO `assign_service` (`user_id`, `service_id`) VALUES
-(2, 2);
+(2, 2),
+(3, 6);
 
 -- --------------------------------------------------------
 
@@ -54,7 +55,14 @@ CREATE TABLE IF NOT EXISTS `auth` (
   `username` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
   PRIMARY KEY (`auth_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `auth`
+--
+
+INSERT INTO `auth` (`auth_id`, `username`, `password`) VALUES
+(1, 'admin', 'admin');
 
 -- --------------------------------------------------------
 
@@ -90,14 +98,15 @@ CREATE TABLE IF NOT EXISTS `personnels` (
   `password` varchar(100) NOT NULL,
   `counter` int NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `personnels`
 --
 
 INSERT INTO `personnels` (`user_id`, `first_name`, `last_name`, `username`, `password`, `counter`) VALUES
-(2, 'vcxvcx', 'vxcv', 'vxcvxc', 'cvxcv', 1);
+(2, 'vcxvcx', 'vxcv', 'user', 'user', 1),
+(3, 'gfdgfd', 'vxcv', 'user2', 'user2', 2);
 
 -- --------------------------------------------------------
 
@@ -113,15 +122,18 @@ CREATE TABLE IF NOT EXISTS `services` (
   `image` varchar(100) NOT NULL,
   `status` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`services_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `services`
 --
 
 INSERT INTO `services` (`services_id`, `service_title`, `service_description`, `image`, `status`) VALUES
-(2, 'Master Data - Check Document Series', 'fdsfdsf', 'Master Data - Check Document Series1710926667.png', 1),
-(3, 'Follow up Checkup', 'fsdfsdf', 'Follow up Checkup1710930395.png', 1);
+(2, 'Prev Demp Agriculture', 'fdsfdsf', 'Master Data - Check Document Series1710926667.png', 1),
+(3, 'Follow up Checkup', '                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Deserunt, molestiae. Dolor voluptas repellendus debitis quam quibusdam harum quisquam deleniti, minus vitae aut molestias is', 'Follow up Checkup1710930395.png', 1),
+(4, 'test', 'sfddfd', 'test1711036196.png', 1),
+(5, 'spotify', 'dasdasdas', 'spotify1711036214.png', 1),
+(6, 'powerpoint', 'gfdgdfgdf', 'powerpoint1711036229.png', 1);
 
 -- --------------------------------------------------------
 
@@ -135,8 +147,51 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   `ticket_no` varchar(100) NOT NULL,
   `service_id` int NOT NULL,
   `status` int NOT NULL DEFAULT '1',
+  `counter` int NOT NULL,
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ticket_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `tickets`
+--
+
+INSERT INTO `tickets` (`ticket_id`, `ticket_no`, `service_id`, `status`, `counter`, `date`) VALUES
+(1, 'A001', 2, 1, 1, '2024-03-22 13:39:25'),
+(2, 'A002', 2, 1, 1, '2024-03-22 13:39:32'),
+(3, 'B001', 6, 1, 2, '2024-03-22 13:39:35'),
+(4, 'A003', 2, 1, 1, '2024-03-22 13:40:04'),
+(5, 'A004', 2, 1, 1, '2024-03-22 13:40:32'),
+(6, 'A005', 2, 1, 1, '2024-03-22 13:41:03'),
+(7, 'A006', 2, 1, 1, '2024-03-22 13:41:53'),
+(8, 'A007', 2, 1, 1, '2024-03-22 13:42:21'),
+(9, 'A008', 2, 1, 1, '2024-03-22 13:42:38'),
+(10, 'A009', 2, 1, 1, '2024-03-22 13:42:55'),
+(11, 'A010', 2, 1, 1, '2024-03-22 13:43:03'),
+(12, 'A011', 2, 1, 1, '2024-03-22 13:43:42'),
+(13, 'A012', 2, 1, 1, '2024-03-22 13:43:51'),
+(14, 'B002', 6, 1, 2, '2024-03-22 13:44:14');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ticket_counter`
+--
+
+DROP TABLE IF EXISTS `ticket_counter`;
+CREATE TABLE IF NOT EXISTS `ticket_counter` (
+  `ticket_number` varchar(100) NOT NULL,
+  `counter` int NOT NULL,
+  `counter_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `ticket_counter`
+--
+
+INSERT INTO `ticket_counter` (`ticket_number`, `counter`, `counter_date`) VALUES
+('A012', 1, '2024-03-22 13:39:25'),
+('B002', 2, '2024-03-22 13:39:35');
 
 -- --------------------------------------------------------
 

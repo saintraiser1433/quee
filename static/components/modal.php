@@ -231,58 +231,64 @@
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
           <div class="modal-content">
               <div class="modal-header">
-                  <h5 class="modal-title">Ticket No#: 12345 </h5>
+                  <h5 class="modal-title ticket-number-title">Ticket No#: </h5>
               </div>
-              <form action="" method="post" enctype="multipart/form-data">
+              <form action="" method="post">
                   <div class="modal-body">
                       <div class="row">
 
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">First Name</label>
-                                  <input type="text" name="lname" class="form-control" id="lname" required>
+                                  <input type="text" name="lname" class="form-control" id="fname" required>
                               </div>
                           </div>
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">Last Name</label>
-                                  <input type="text" name="username" class="form-control" id="username" required>
+                                  <input type="text" name="username" class="form-control" id="lname" required>
                               </div>
                           </div>
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">Sex</label>
-                                  <input type="text" name="password" class="form-control" id="password" required>
+                                  <select id="sex" class="form-select" required>
+                                    <option selected></option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                  </select>
+                                  
                               </div>
                           </div>
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">Age</label>
-                                  <input type="text" name="password" class="form-control" id="password" required>
+                                  <input type="number" name="password" class="form-control" id="age" required>
                               </div>
                           </div>
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">Address</label>
-                                  <input type="text" name="password" class="form-control" id="password" required>
+                                  <input type="text" name="password" class="form-control" id="address" required>
                               </div>
                           </div>
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">Service Availed</label>
-                                  <input type="text" name="password" class="form-control" id="password" required>
+                                  <input type="text" name="password" class="form-control" id="serviceavail" readonly>
                               </div>
                           </div>
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">Type of Client</label>
-                                  <select id="counter" class="form-select" id="counter" required>
+                                  <select id="type-client" class="form-select text-capitalize" required>
                                       <option selected></option>
-                                      <option value='1'>1</option>
-                                      <option value='2'>2</option>
-                                      <option value='3'>3</option>
-                                      <option value='4'>4</option>
-                                      <option value='5'>5</option>
+                                      <?php
+                                        $sql = "SELECT * FROM type_clients where status = 1";
+                                        $rs = $conn->query($sql);
+                                        foreach ($rs as $row) { ?>
+                                          <option value='<?php echo $row['type_client_id'] ?>'><?php echo $row['client_description'] ?></option>
+                                      <?php } ?>
                                   </select>
 
                               </div>
@@ -290,7 +296,7 @@
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">Date of Application</label>
-                                  <input type="text" name="fname" class="form-control" id="fname" required>
+                                  <input type="text" name="fname" class="form-control" id="date" value="<?php echo date('M-d-y'); ?>" required>
                               </div>
                           </div>
 
@@ -298,9 +304,9 @@
                   </div>
                   <div class="modal-footer">
                       <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
-                          Cancel This Ticket
+                          Cancel
                       </a>
-                      <button type="submit" class="btn btn-primary ms-auto" name="submit" id="submituser">
+                      <button type="button" class="btn btn-primary ms-auto" name="submit" id="submitDetails">
                           <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                           <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -328,23 +334,23 @@
                   <div class="modal-body">
                       <div class="d-flex flex-column align-items-center">
                           <h1 class="text-center">YOUR TICKET NUMBER</h1>
-                          <div class="ticketFont">#1001
-                          <hr>
+                          <div class="ticketFont">
+
                           </div>
-                         
-                          <button type="button" class="btn btn-success print">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-right">
-                                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                  <path d="M7 7l5 5l-5 5" />
-                                  <path d="M13 7l5 5l-5 5" />
-                              </svg>
-                              PRINT</button>
+                          <div>
+                              <button type="button" class="btn btn-success print">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-right">
+                                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                      <path d="M7 7l5 5l-5 5" />
+                                      <path d="M13 7l5 5l-5 5" />
+                                  </svg>
+                                  PRINT</button>
+                          </div>
+
                       </div>
-
                   </div>
-          </div>
 
-          </form>
+              </form>
+          </div>
       </div>
-  </div>
   </div>

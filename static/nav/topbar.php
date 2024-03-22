@@ -29,14 +29,21 @@
             </div>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
-                    <span class="avatar avatar-sm" style="background-image: url(./static/avatars/man.png)"></span>
+                    <span class="avatar avatar-sm" style="background-image: url(../static/images/boy.png)"></span>
                     <div class="d-none d-xl-block ps-2">
-                        <div>Admin</div>
-                        <div class="mt-1 small text-muted">Administrator</div>
+                        <div class="text-capitalize">
+                            <?php if (isset($_SESSION['name'])) {
+                                echo $_SESSION['name'];
+                            } ?>
+                        </div>
+                        <?php if (isset($_SESSION['role'])) {
+                            echo '<div class="mt-1 small text-muted">Personnel '.$_SESSION['role'].'</div>';
+                        } ?>
+
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <a href="logout.php" class="dropdown-item">Logout</a>
+                    <a href="../logout.php" class="dropdown-item">Logout</a>
                 </div>
             </div>
         </div>

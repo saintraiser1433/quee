@@ -1,6 +1,8 @@
 <?php
 include '../drivers/connection.php';
-
+if (!isset($_SESSION['auth_id'])) {
+  header("Location:../index.php");
+}
 ?>
 
 <!DOCTYPE html>
@@ -232,7 +234,7 @@ include '../drivers/connection.php';
                 }
 
               });
-              
+
 
             }
           }

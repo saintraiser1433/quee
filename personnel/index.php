@@ -1,5 +1,11 @@
 <?php
 include '../drivers/connection.php';
+if (!isset($_SESSION['user_id'])) {
+  header("Location:../index.php");
+}
+$session = $_SESSION['user_id'];
+
+
 
 ?>
 
@@ -35,7 +41,7 @@ include '../drivers/connection.php';
                 <div class="card-body">
                   <div class="d-flex flex-column align-items-center">
                     <h1 class="text-center">NOW SERVING</h1>
-                    <div class="ticketFont">#1001</div>
+                    <div class="ticketFont">#</div>
                   </div>
                   <hr>
                   <div class="d-flex justify-content-center gap-2">
@@ -46,7 +52,7 @@ include '../drivers/connection.php';
                         <path d="M13 7l5 5l-5 5" />
                       </svg>
                       Next</button>
-                    <button type="button" class="btn btn-secondary add">
+                    <button type="button" class="btn btn-secondary notify" style="display:none">
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-speakerphone">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M18 8a3 3 0 0 1 0 6" />
@@ -55,13 +61,13 @@ include '../drivers/connection.php';
                       </svg>
                       Notify</button>
 
-                    <button type="button" class="btn btn-info cancel">
+                    <button type="button" class="btn btn-info details" style="display:none">
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-details">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M11.999 3l.001 17" />
                         <path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" />
                       </svg>
-                      Details</button>
+                      Add Details</button>
                   </div>
 
 
@@ -95,19 +101,10 @@ include '../drivers/connection.php';
 
                           </tr>
                         </thead>
-                        <tbody class="table-tbody">
-                          <tr>
-                            <td>1</td>
-                            <td>1002</td>
-                          </tr>
-
+                        <tbody class="table-tbody" id="tdappend">
                         </tbody>
                       </table>
-                      <br>
-                      <div class="btn-toolbar">
-                        <p class="mb-0" id="listjs-showing-items-label">Showing 0 items</p>
-                        <ul class="pagination ms-auto mb-0"></ul>
-                      </div>
+
                     </div>
 
                   </div>
@@ -121,7 +118,7 @@ include '../drivers/connection.php';
       <?php include '../static/components/modal.php'; ?>
     </div>
   </div>
-
+  <audio id="nextSound" src="../static/soundeffect/next.wav"></audio>
 
 
 
@@ -137,8 +134,146 @@ include '../drivers/connection.php';
 
 <script>
   $(document).ready(function() {
+    let id = 0;
+    let ticket = '';
+    let serviceTitle = '';
+    let speech = new SpeechSynthesisUtterance();
+    $('.notify').on('click', function() {
+      speech.text = 'Ticket Number ' + ticket + ' Please proceed to counter';
+      window.speechSynthesis.speak(speech)
+    });
     $('.next').on('click', function() {
-      $('#modal-client').modal('show')
+      $.ajax({
+        method: "POST",
+        url: "../ajax/nextque.php",
+        data: {
+          ticketId: id,
+          userId: '<?php echo $session ?>'
+        },
+
+        success: function(res) {
+          if (res == 1) {
+            swal("NO QUE's SO FAR", {
+              icon: "warning",
+            })
+          } else {
+            $('#nextSound')[0].play();
+          }
+        }
+
+      });
+    });
+
+    function getQues() {
+      $.ajax({
+        method: "POST",
+        url: "../ajax/realtimeque.php",
+        data: {
+          userId: '<?php echo $session ?>',
+        },
+        dataType: 'json',
+        success: function(res) {
+
+          if (res.length == 0) {
+            id = 0;
+            $('.ticketFont').html('#');
+            $('.details').hide();
+            $('.notify').hide();
+          } else {
+            id = res.ticket_id;
+            ticket = res.ticket_no;
+            serviceTitle = res.service_title;
+            $('.ticket-number-title').html('Ticket No#:' + ticket)
+            $('#serviceavail').val(serviceTitle)
+            $('.details').show();
+            $('.notify').show();
+            $('.ticketFont').html('#' + res.ticket_no);
+          }
+
+        }
+
+      });
+    }
+
+    function getQuesDetail() {
+      $.ajax({
+        method: "POST",
+        url: "../ajax/realtimedataques.php",
+        data: {
+          userId: '<?php echo $session ?>',
+        },
+        dataType: 'json',
+        success: function(res) {
+          $('#tdappend').empty();
+          let increment = 1;
+          if (res.length == 0) {
+            $('#tdappend').append(
+              `<tr>
+              <td colspan="2" class="text-center">NO QUE'S</td>
+              </tr>`
+            )
+          } else {
+            for (var i = 0; i < res.length; i++) {
+              var item = res[i];
+
+              $('#tdappend').append(
+                `<tr>
+              <td>${increment++}</td>
+              <td>${item.ticket_no}</td>
+              </tr>`
+              )
+            }
+          }
+
+
+        }
+
+      });
+    }
+
+    setInterval(getQues, 1000)
+    setInterval(getQuesDetail, 1000)
+
+    $(document).on('click', '#submitDetails', function(e) {
+      e.preventDefault();
+      swal({
+          title: "Are you sure?",
+          text: "Once submit , it will proceed to the next ticket",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((willDelete) => {
+          if (willDelete) {
+            $.ajax({
+              method: "POST",
+              url: "static/ajax/delete.php",
+              data: {
+                myids: col1,
+                table: 'asset',
+                key: 'asset_code'
+              },
+              success: function(html) {
+                swal("Poof! Your imaginary file has been deleted!", {
+                  icon: "success",
+                }).then((value) => {
+                  location.reload();
+                });
+              }
+
+            });
+
+          } else {
+            swal("Your imaginary file is safe!");
+          }
+        });
+    });
+
+
+
+    $('.details').on('click', function() {
+      $('#serviceavail').val()
+      $('#modal-client').modal('show');
     });
   });
 </script>

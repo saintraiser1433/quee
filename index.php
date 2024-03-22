@@ -3,16 +3,32 @@ include 'drivers/connection.php';
 
 if (isset($_POST['submit'])) {
   $username = $_POST['username'];
-  $password = md5($_POST['password']);
-  $sql = "SELECT * FROM auth where username='$username' and password='$password'";
-  $rs = $conn->query($sql);
-  $row = $rs->fetch_assoc();
-  if ($rs->num_rows > 0) {
-    $_SESSION['ad_id'] = $row['id'];
-    header("Location:admin/dashboard.php");
+  $password = $_POST['password'];
+  if (isset($_GET['us3r']) == 'admin') {
+    $sql = "SELECT * FROM auth where username='$username' and password='$password'";
+    $rs = $conn->query($sql);
+    $row = $rs->fetch_assoc();
+    if ($rs->num_rows > 0) {
+      $_SESSION['auth_id'] = $row['auth_id'];
+      $_SESSION['name'] = 'Administrator';
+      header("Location:admin/users.php");
+    } else {
+      $_SESSION['response'] = "Incorrect Credentials";
+      $_SESSION['type'] = "error";
+    }
   } else {
-    $_SESSION['response'] = "Incorrect Credentials";
-    $_SESSION['type'] = "error";
+    $sql = "SELECT * FROM personnels where username='$username' and password='$password'";
+    $rs = $conn->query($sql);
+    $row = $rs->fetch_assoc();
+    if ($rs->num_rows > 0) {
+      $_SESSION['name'] = $row['last_name'] . ", " . $row['first_name'];
+      $_SESSION['role'] = $row['counter'];
+      $_SESSION['user_id'] = $row['user_id'];
+      header("Location:personnel/index.php");
+    } else {
+      $_SESSION['response'] = "Incorrect Credentials";
+      $_SESSION['type'] = "error";
+    }
   }
 }
 
@@ -21,7 +37,36 @@ if (isset($_POST['submit'])) {
 <!doctype html>
 
 <html lang="en">
-<?php include 'static/nav/head.php' ?>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>
+    Queueing System
+  </title>
+  <!-- CSS files -->
+  <link href="dist/css/tabler.min.css?1684106062" rel="stylesheet" />
+  <link href="dist/css/tabler-flags.min.css?1684106062" rel="stylesheet" />
+  <link href="dist/css/tabler-payments.min.css?1684106062" rel="stylesheet" />
+  <link href="dist/css/tabler-vendors.min.css?1684106062" rel="stylesheet" />
+  <link href="dist/css/demo.min.css?1684106062" rel="stylesheet" />
+  <style>
+    @import url("https://rsms.me/inter/inter.css");
+
+    :root {
+      --tblr-font-sans-serif: "Inter Var", -apple-system, BlinkMacSystemFont,
+        San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+    }
+
+    body {
+      font-feature-settings: "cv03", "cv04", "cv11";
+    }
+  </style>
+
+
+</head>
+
 
 <body class=" d-flex flex-column">
   <script src="./dist/js/demo-theme.min.js?1684106062"></script>
@@ -64,6 +109,19 @@ if (isset($_POST['submit'])) {
             </div>
             <div class="form-footer">
               <button type="submit" name="submit" class="btn btn-primary w-100">Sign in</button>
+
+            </div>
+
+            <div class="d-flex flex-column align-items-center mt-3">
+              <?php
+              if (isset($_GET['us3r']) == 'admin') {
+                echo '<a href="index.php">Login as personnel</a>';
+              } else {
+                echo '<a href="?us3r=admin">Login as admin</a>';
+              }
+
+              ?>
+
             </div>
           </form>
         </div>
@@ -75,8 +133,28 @@ if (isset($_POST['submit'])) {
   <!-- Libs JS -->
   <!-- Tabler Core -->
 
+  <!-- Libs JS -->
+  <script src="dist/js/jquery-3.5.1.js" type="text/javascript"></script>
+  <script src="dist/libs/list.js/dist/list.min.js?1684106062" defer></script>
+  <!-- Tabler Core -->
+  <script src="dist/js/tabler.min.js?1684106062" defer></script>
+  <script src="dist/js/demo.min.js?1684106062" defer></script>
+  <script src="dist/js/list-datable.js"></script>
+  <script src="dist/libs/sweetalert/sweetalert.js"></script>
+  <script src="dist/libs/tom-select/dist/js/tom-select.base.min.js?1692870487" defer></script>
 
-  <?php include 'static/nav/scripts.php' ?>
+
+  <script>
+    $(document).ready(function() {
+      if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+      }
+    });
+  </script>
+
+
+
+
 
   <?php
   if (isset($_SESSION['response']) && $_SESSION['response'] != "") {

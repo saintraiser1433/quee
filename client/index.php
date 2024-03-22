@@ -20,13 +20,21 @@
               </div>
               <div class="row">
                 <?php
-                $sql = "SELECT * FROM services where status = 1";
+                $sql = "SELECT
+                        b.*,
+                        c.counter
+                        FROM
+                            assign_service a
+                        INNER JOIN services b ON
+                            a.service_id = b.services_id
+                        INNER JOIN personnels c ON a.user_id = c.user_id
+                        WHERE b.status = 1";
                 $rs = $conn->query($sql);
                 foreach ($rs as $row) {
                 ?>
                   <div class="col-lg-3 pb-2">
 
-                    <div class="card card-link card-link-pop" onclick="service('<?php echo $row['services_id'] ?>','<?php echo $row['service_title'] ?>')" style="cursor:pointer; height:350px">
+                    <div class="card card-link card-link-pop" onclick="service('<?php echo $row['services_id'] ?>','<?php echo $row['service_title'] ?>','<?php echo $row['counter'] ?>')" style="cursor:pointer; height:350px">
                       <div class="card-status-bottom bg-success"></div>
                       <!-- Photo -->
                       <div class="img-responsive img-responsive-16x9 card-img-top" style="background-image: url('../static/images/menu/<?php echo $row['image'] ?>');"></div>
@@ -65,7 +73,7 @@
 
 
   <script>
-    function service(id, title) {
+    function service(id, title, counter) {
       swal({
           title: "Are you sure?",
           text: "Adding Que's in this service: " + title,
@@ -79,10 +87,12 @@
               method: "POST",
               url: "../ajax/ticket.php",
               data: {
-                service_id:id
+                service_id: id,
+                counter: counter
               },
               success: function(html) {
                 $('#modal-ticket').modal('show');
+                $('.ticketFont').html('#' + html);
               }
 
             });
@@ -99,8 +109,10 @@
 </html>
 <style>
   .ticketFont {
-    font-size: 48px;
+    font-size: 40px;
     font-weight: bold;
+    border-bottom: 1px solid gray;
+    margin-bottom: 10px;
 
   }
 </style>

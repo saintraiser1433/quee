@@ -1,8 +1,8 @@
 <?php
 include '../drivers/connection.php';
-// if (!isset($_SESSION['ad_id'])) {
-//   header("Location:index.php");
-// }
+if (!isset($_SESSION['auth_id'])) {
+  header("Location:../index.php");
+}
 $date = date('Y');
 $sql = "SELECT COUNT(*) AS cnt,MONTHNAME(date_borrow) as borrow from return_asset where YEAR(date_borrow)='$date'";
 $rs = $conn->query($sql);
@@ -21,7 +21,7 @@ $monthData = array_column($resultArray, 'borrow');
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include '../static/nav/head.php'?>
+<?php include '../static/nav/head.php' ?>
 
 <body>
   <script src="../dist/js/demo-theme.min.js?1684106062"></script>
