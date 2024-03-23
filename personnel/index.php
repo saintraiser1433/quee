@@ -143,6 +143,23 @@ $session = $_SESSION['user_id'];
       window.speechSynthesis.speak(speech)
     });
     $('.next').on('click', function() {
+      swal({
+          title: "Are you sure?",
+          text: "You want to proceed to the next que without adding details?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((willConfirm) => {
+          if (willConfirm) {
+            nextQue();
+          }
+        });
+
+    });
+
+
+    function nextQue() {
       $.ajax({
         method: "POST",
         url: "../ajax/nextque.php",
@@ -162,7 +179,7 @@ $session = $_SESSION['user_id'];
         }
 
       });
-    });
+    }
 
     function getQues() {
       $.ajax({
@@ -231,11 +248,18 @@ $session = $_SESSION['user_id'];
       });
     }
 
-    setInterval(getQues, 1000)
-    setInterval(getQuesDetail, 1000)
+    setInterval(getQues, 500)
+    setInterval(getQuesDetail, 500)
 
     $(document).on('click', '#submitDetails', function(e) {
       e.preventDefault();
+      let fname = $("#fnamex").val();
+      let lname = $("#lnamex").val();
+      let sex = $("#sex").val();
+      let age = $("#age").val();
+      let address = $("#address").val();
+      let typeclient = $("#type-client").val();
+
       swal({
           title: "Are you sure?",
           text: "Once submit , it will proceed to the next ticket",
@@ -247,17 +271,22 @@ $session = $_SESSION['user_id'];
           if (willDelete) {
             $.ajax({
               method: "POST",
-              url: "static/ajax/delete.php",
+              url: "../ajax/submitdetails.php",
               data: {
-                myids: col1,
-                table: 'asset',
-                key: 'asset_code'
+                fname: fname,
+                lname: lname,
+                sex: sex,
+                age: age,
+                address: address,
+                typeclient: typeclient,
+                ticketId: id
               },
               success: function(html) {
-                swal("Poof! Your imaginary file has been deleted!", {
+                swal("Success!", {
                   icon: "success",
                 }).then((value) => {
-                  location.reload();
+                  $('#modal-client').modal('hide');
+                  nextQue();
                 });
               }
 

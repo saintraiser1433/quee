@@ -33,8 +33,8 @@ if (!isset($_SESSION['auth_id'])) {
           <div class="card">
             <div class="card-body">
               <div id="listjs">
-                <div class="d-flex align-items-center justify-content-between">
-                  <button type="button" class="btn btn-primary add">Add</button>
+                <div class="d-flex align-items-center justify-content-end">
+                 
                   <div class="flex-shrink-0">
                     <input class="form-control listjs-search" id="search-input" placeholder="Search" style="max-width: 200px;" />
                   </div>
@@ -51,18 +51,16 @@ if (!isset($_SESSION['auth_id'])) {
                           </button>
                         </th>
                         <th>
+                          Name
+                        </th>
+                        <th>
                           <button class="table-sort" data-sort="sort-name">
-                            Icon
+                            Service Avail
                           </button>
                         </th>
                         <th>
                           <button class="table-sort" data-sort="sort-name">
-                            Services Description
-                          </button>
-                        </th>
-                        <th>
-                          <button class="table-sort" data-sort="sort-dob">
-                            Status
+                            Date Issued
                           </button>
                         </th>
                         <th>
@@ -70,17 +68,43 @@ if (!isset($_SESSION['auth_id'])) {
                             Action
                           </button>
                         </th>
-
+                        <th class="d-none"></th>
                       </tr>
                     </thead>
                     <tbody class="table-tbody">
-                      <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>
+
+                      <?php
+                      $sql = "SELECT
+                      CONCAT(b.first_name,', ',b.last_name) as fname,
+                      c.service_title,
+                      b.date_application,
+                      b.client_id
+                      FROM
+                      tickets a
+                      INNER JOIN clients b ON a.ticket_id = b.ticket_id INNER JOIN services c ON c.services_id = a.service_id";
+                      $rs = $conn->query($sql);
+                      $i = 1;
+                      foreach ($rs as $rows) { ?>
+                        <tr>
+                          <td><?php echo $i++; ?></td>
+                          <td class="text-capitalize"><?php echo $rows['fname'] ?></td>
+                          <td><?php echo $rows['service_title'] ?></td>
+                          <td><?php echo date('M-d-Y', strtotime($rows['date_application'])) ?></td>
+                          <td>
+                            <a href="#" class="badge bg-info detail">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                                <path d="M6 21v-2a4 4 0 0 1 4 -4h3.5" />
+                                <path d="M18.42 15.61a2.1 2.1 0 0 1 2.97 2.97l-3.39 3.42h-3v-3l3.42 -3.39z" />
+                              </svg>
+
+                            </a>
+                          </td>
+                          <td class="d-none"><?php echo $rows['client_id'] ?></td>
+                        </tr>
+                      <?php } ?>
+
                     </tbody>
                   </table>
                   <br>
@@ -124,70 +148,36 @@ if (!isset($_SESSION['auth_id'])) {
 
   <script>
     $(document).ready(function() {
-      $(document).on('click', '.edit', function() {
-        $('#modal-add').modal('show');
+      $(document).on('click', '.detail', function(e) {
+
         $tr = $(this).closest('tr');
         var data = $tr.children("td").map(function() {
           return $(this).text();
         }).get();
-        $('#assetcode').val(data[0]);
-        $('#itemname').val(data[2]);
-        $('#description').val(data[3]);
-        $('#category').val(data[8]);
-        $('#quantity').val(data[5]);
-        $('#condition').val(data[6]);
-        $('.modal-title').html('Update Assets');
-        $('#type').val('1');
+
+        $.ajax({
+          method: "POST",
+          url: "../ajax/get-ticket-details.php",
+          data: {
+            clientId: data[5],
+          },
+          success: function(res) {
+            let html = JSON.parse(res);
+            $("#fnamexss").val(html.first_name);
+            $("#lnamexss").val(html.last_name);
+            $("#sexxs").val(html.sex);
+            $("#agexss").val(html.age);
+            $("#addressxs").val(html.address);
+            $('#serviceavailxs').val(html.service_title)
+            $("#type-clientxs").val(html.type_client_id);
+            $('#datexs').val(html.dates)
+            $('#modal-client-detail').modal('show');
+          }
+        });
+
       });
 
 
-      $(document).on('click', '.add', function() {
-        $('#modal-service').modal('show');
-        $tr = $(this).closest('tr');
-        var data = $tr.children("td").map(function() {
-          return $(this).text();
-        }).get();
-        $('.modal-title').html('Insert Services');
-
-
-      });
-
-      $(document).on('click', '.delete', function(e) {
-        e.preventDefault();
-        var currentRow = $(this).closest("tr");
-        var col1 = currentRow.find("td:eq(0)").text();
-        swal({
-            title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover this imaginary file!",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-          })
-          .then((willDelete) => {
-            if (willDelete) {
-              $.ajax({
-                method: "POST",
-                url: "static/ajax/delete.php",
-                data: {
-                  myids: col1,
-                  table: 'asset',
-                  key: 'asset_code'
-                },
-                success: function(html) {
-                  swal("Poof! Your imaginary file has been deleted!", {
-                    icon: "success",
-                  }).then((value) => {
-                    location.reload();
-                  });
-                }
-
-              });
-
-            } else {
-              swal("Your imaginary file is safe!");
-            }
-          });
-      });
     });
   </script>
 </body>

@@ -32,6 +32,12 @@ if (!isset($_SESSION['user_id'])) {
           <div class="card">
             <div class="card-body">
               <div id="listjs">
+                <div class="d-flex align-items-center justify-content-end">
+                  <div class="flex-shrink-0">
+                    <input class="form-control listjs-search" id="search-input" placeholder="Search" style="max-width: 200px;" />
+                  </div>
+                </div>
+                <br>
                 <div id="pagination-container"></div>
                 <div id="table-default" class="table-responsive">
                   <table class="table" id="tables">
@@ -66,17 +72,27 @@ if (!isset($_SESSION['user_id'])) {
                     <tbody class="table-tbody">
 
                       <?php
-                      $sql = "SELECT * FROM services";
+                      $id = $_SESSION['user_id'];
+                      $sql = "SELECT
+                      CONCAT(c.first_name,', ',c.last_name) as fname,
+                      d.service_title,
+                      c.date_application,
+                      c.client_id
+                      FROM
+                      personnels a INNER JOIN tickets b ON a.counter = b.counter 
+                      INNER JOIN clients c ON c.ticket_id = b.ticket_id INNER JOIN services d ON d.services_id = b.service_id
+                      INNER JOIN assign_service e ON a.user_id = e.user_id
+                       where a.user_id = $id  ";
                       $rs = $conn->query($sql);
                       $i = 1;
                       foreach ($rs as $rows) { ?>
                         <tr>
                           <td><?php echo $i++; ?></td>
+                          <td class="text-capitalize"><?php echo $rows['fname'] ?></td>
                           <td><?php echo $rows['service_title'] ?></td>
-                          <td><?php echo $rows['service_description'] ?></td>
-                          <td></td>
+                          <td><?php echo date('M-d-Y', strtotime($rows['date_application'])) ?></td>
                           <td>
-                            <a href="#" class="badge bg-yellow edit">
+                            <a href="#" class="badge bg-info detail">
                               <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
@@ -86,6 +102,7 @@ if (!isset($_SESSION['user_id'])) {
 
                             </a>
                           </td>
+                          <td class="d-none"><?php echo $rows['client_id'] ?></td>
                         </tr>
                       <?php } ?>
 
@@ -131,170 +148,37 @@ if (!isset($_SESSION['user_id'])) {
   ?>
 
   <script>
-    function readURL(input) {
-      if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          $('#ImgID').attr('src', e.target.result);
-
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
-    }
     $(document).ready(function() {
-      let id = null;
-      $(document).on('click', '#upload', function() {
-        $('#filer_input_single').click();
-      });
 
-      $(document).on('click', '.edit', function() {
-        $('#modal-service').modal('show');
+      $(document).on('click', '.detail', function(e) {
+
         $tr = $(this).closest('tr');
         var data = $tr.children("td").map(function() {
           return $(this).text();
         }).get();
-        id = data[6];
 
         $.ajax({
-          method: "GET",
-          url: "../ajax/service.php",
+          method: "POST",
+          url: "../ajax/get-ticket-details.php",
           data: {
-            action: 'sds',
-            serviceId: id,
+            clientId: data[5],
           },
-          dataType: 'json',
           success: function(res) {
-            const html = res[0];
-            if (html.status == 1) {
-              stat = 'checked'
-            } else {
-              stat = ''
-            }
-            $('.my-switch').css('display', 'block');
-            $('#ImgID').attr('src', '../static/images/menu/' + html.image);
-            $('#servicetitle').val(html.service_title);
-            $('#servicedescription').val(html.service_description);
-            $('#servicestatus').prop('checked', stat);
+            let html = JSON.parse(res);
+            $("#fnamexss").val(html.first_name);
+            $("#lnamexss").val(html.last_name);
+            $("#sexxs").val(html.sex);
+            $("#agexss").val(html.age);
+            $("#addressxs").val(html.address);
+            $('#serviceavailxs').val(html.service_title)
+            $("#type-clientxs").val(html.type_client_id);
+            $('#datexs').val(html.dates)
+            $('#modal-client-detail').modal('show');
           }
-
         });
-        $('.modal-title').html('Update Service');
+
       });
 
-
-      $(document).on('click', '.add', function() {
-        $('#modal-service').modal('show');
-        $('.modal-title').html('Insert Services');
-        id = null;
-        $('.my-switch').css('display', 'none');
-      });
-
-      $(document).on('click', '.delete', function(e) {
-        e.preventDefault();
-        var currentRow = $(this).closest("tr");
-        var col1 = currentRow.find("td:eq(6)").text();
-        swal({
-            title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover this imaginary file!",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-          })
-          .then((willDelete) => {
-            if (willDelete) {
-              $.ajax({
-                method: "POST",
-                url: "../ajax/service.php",
-                data: {
-                  serviceId: col1,
-                  action: 'DELETE'
-                },
-                success: function(html) {
-                  swal("Poof! Your imaginary file has been deleted!", {
-                    icon: "success",
-                  }).then((value) => {
-                    location.reload();
-                  });
-                }
-
-              });
-
-            } else {
-              swal("Your imaginary file is safe!");
-            }
-          });
-      });
-
-
-      $(document).on('click', '#submitservice', function(e) {
-        e.preventDefault();
-        var fileInput = document.getElementById('filer_input_single');
-        var formData = new FormData();
-        let text = null;
-        var status = $('#servicestatus').prop('checked');
-        if (status) {
-          checkStatus = 1;
-        } else {
-          checkStatus = 0;
-        }
-        formData.append('serviceId', id);
-        formData.append('servicetitle', $('#servicetitle').val());
-        formData.append('servicedescription', $('#servicedescription').val());
-        formData.append('servicestatus', checkStatus);
-        formData.append('files', fileInput.files[0]);
-        if (id === null) {
-          formData.append('action', 'ADD');
-          text = "You want to add this service?";
-
-        } else {
-          formData.append('action', 'UPDATE');
-          text = "You want to update this service?";
-        }
-        swal({
-            title: "Are you sure?",
-            text: text,
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-          })
-          .then((isConfirm) => {
-            if (isConfirm) {
-              if (id === null) {
-                $.ajax({
-                  method: "POST",
-                  url: "../ajax/service.php",
-                  data: formData,
-                  processData: false,
-                  contentType: false,
-                  cache: false,
-                  success: function(html) {
-                    swal("Success", {
-                      icon: "success",
-                    }).then((value) => {
-                      location.reload();
-                    });
-                  }
-                });
-              } else {
-                $.ajax({
-                  method: "POST",
-                  url: "../ajax/service.php",
-                  data: formData,
-                  processData: false,
-                  contentType: false,
-                  cache: false,
-                  success: function(html) {
-                    swal("Success", {
-                      icon: "success",
-                    }).then((value) => {
-                      location.reload();
-                    });
-                  }
-                });
-              }
-            }
-          });
-      });
     });
   </script>
 </body>

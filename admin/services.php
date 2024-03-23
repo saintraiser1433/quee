@@ -3,6 +3,14 @@ include '../drivers/connection.php';
 if (!isset($_SESSION['auth_id'])) {
   header("Location:../index.php");
 }
+if (isset($_GET['stat']) && isset($_GET['stat']) != '') {
+  $stat = $_GET['stat'];
+  $theid = $_GET['servId'];
+  $sql = "UPDATE services SET status = $stat where services_id=$theid";
+  $conn->query($sql);
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -58,11 +66,6 @@ if (!isset($_SESSION['auth_id'])) {
                           </button>
                         </th>
                         <th>
-                          <button class="table-sort" data-sort="sort-name">
-                            Service Description
-                          </button>
-                        </th>
-                        <th>
                           <button class="table-sort" data-sort="sort-dob">
                             Status
                           </button>
@@ -86,13 +89,13 @@ if (!isset($_SESSION['auth_id'])) {
                           <td><?php echo $i++; ?></td>
                           <td><img src="../static/images/menu/<?php echo $rows['image'] ?>" class="rounded-circle" style="width:30px;height:30px;"></td>
                           <td><?php echo $rows['service_title'] ?></td>
-                          <td><?php echo $rows['service_description'] ?></td>
+
                           <td>
                             <?php
                             if ($rows['status'] == 1) {
-                              echo '<span class="badge badge-sm bg-green text-uppercase ms-auto text-white">Active</span>';
+                              echo " <a href='?stat=0&servId=" . $rows['services_id'] . "'><span class='badge badge-sm bg-green text-white text-uppercase ms-auto'>Active</span></a>";
                             } else if ($rows['status'] == 0) {
-                              echo '<span class="badge badge-sm bg-red text-uppercase ms-auto text-white">Inactive</span>';
+                              echo " <a href='?stat=1&servId=" . $rows['services_id'] . "'><span class='badge badge-sm bg-red text-white text-uppercase ms-auto'>Inactive</span></a>";
                             }
                             ?>
                           </td>

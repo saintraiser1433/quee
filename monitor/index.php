@@ -18,35 +18,35 @@ include '../drivers/connection.php';
           <div class="mb-3">
             <div class="card">
               <div class="card-body bg-primary">
-                <div class="typo text-white">A001</div>
+                <div class="typo text-white" id="personnel1"></div>
               </div>
             </div>
           </div>
           <div class="mb-3">
             <div class="card">
               <div class="card-body bg-primary">
-                <div class="typo text-white">B002</div>
+                <div class="typo text-white" id="personnel2">B002</div>
               </div>
             </div>
           </div>
           <div class="mb-3">
             <div class="card">
               <div class="card-body bg-primary">
-                <div class="typo text-white">C003</div>
+                <div class="typo text-white" id="personnel3">C003</div>
               </div>
             </div>
           </div>
           <div class="mb-3">
             <div class="card">
               <div class="card-body bg-primary">
-                <div class="typo text-white">D004</div>
+                <div class="typo text-white" id="personnel4">D004</div>
               </div>
             </div>
           </div>
           <div class="mb-3">
             <div class="card">
               <div class="card-body bg-primary">
-                <div class="typo text-white">E005</div>
+                <div class="typo text-white" id="personnel5">E005</div>
               </div>
             </div>
           </div>
@@ -121,7 +121,7 @@ include '../drivers/connection.php';
     </div>
   </div>
 
-
+  <?php include '../static/nav/scripts.php' ?>
 </body>
 
 </html>
@@ -153,3 +153,39 @@ include '../drivers/connection.php';
     background-color: #F4F3F2;
   }
 </style>
+
+<script>
+  $(document).ready(function() {
+    function getQuest() {
+      $.ajax({
+        method: "POST",
+        url: "../ajax/monitorques.php",
+        dataType: 'json',
+        success: function(res) {
+          let cnt1 = res.cnt1 ?? 'A000';
+          let cnt2 = res.cnt2 ?? 'B000';
+          let cnt3 = res.cnt3 ?? 'C000';
+          let cnt4 = res.cnt4 ?? 'D000';
+          let cnt5 = res.cnt5 ?? 'E000';
+          if (res.length == 0) {
+            $('#personnel1').html('A000');
+            $('#personnel2').html('B000');
+            $('#personnel3').html('C000');
+            $('#personnel4').html('D000');
+            $('#personnel5').html('E000');
+          } else {
+            $('#personnel1').html(cnt1);
+            $('#personnel2').html(cnt2);
+            $('#personnel3').html(cnt3);
+            $('#personnel4').html(cnt4);
+            $('#personnel5').html(cnt5);
+          }
+
+        }
+
+      });
+    }
+
+    setInterval(getQuest, 500);
+  });
+</script>

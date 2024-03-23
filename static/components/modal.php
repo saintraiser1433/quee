@@ -240,42 +240,42 @@
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">First Name</label>
-                                  <input type="text" name="lname" class="form-control" id="fname" required>
+                                  <input type="text" name="fname" class="form-control" id="fnamex" required>
                               </div>
                           </div>
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">Last Name</label>
-                                  <input type="text" name="username" class="form-control" id="lname" required>
+                                  <input type="text" name="lname" class="form-control" id="lnamex" required>
                               </div>
                           </div>
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">Sex</label>
                                   <select id="sex" class="form-select" required>
-                                    <option selected></option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
+                                      <option selected></option>
+                                      <option value="Male">Male</option>
+                                      <option value="Female">Female</option>
                                   </select>
-                                  
+
                               </div>
                           </div>
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">Age</label>
-                                  <input type="number" name="password" class="form-control" id="age" required>
+                                  <input type="number" name="age" class="form-control" id="age" required>
                               </div>
                           </div>
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">Address</label>
-                                  <input type="text" name="password" class="form-control" id="address" required>
+                                  <input type="text" name="address" class="form-control" id="address" required>
                               </div>
                           </div>
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">Service Availed</label>
-                                  <input type="text" name="password" class="form-control" id="serviceavail" readonly>
+                                  <input type="text" name="serviceavail" class="form-control" id="serviceavail" readonly>
                               </div>
                           </div>
                           <div class="col-lg-6">
@@ -296,7 +296,7 @@
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">Date of Application</label>
-                                  <input type="text" name="fname" class="form-control" id="date" value="<?php echo date('M-d-y'); ?>" required>
+                                  <input type="text" name="date" class="form-control" id="date" value="<?php echo date('M-d-y'); ?>" readonly>
                               </div>
                           </div>
 
@@ -350,6 +350,94 @@
                       </div>
                   </div>
 
+              </form>
+          </div>
+      </div>
+  </div>
+
+
+  <!-- modal for client details -->
+  <div class="modal modal-blur fade" id="modal-client-detail" data-bs-backdrop='static' data-bs-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title"> Client Details </h5>
+              </div>
+              <form action="" method="post">
+                  <div class="modal-body">
+                      <div class="row">
+
+                          <div class="col-lg-6">
+                              <div class="mb-3">
+                                  <label class="form-label">First Name</label>
+                                  <input type="text" name="fname" class="form-control" id="fnamexss" readonly>
+                              </div>
+                          </div>
+                          <div class="col-lg-6">
+                              <div class="mb-3">
+                                  <label class="form-label">Last Name</label>
+                                  <input type="text" name="lname" class="form-control" id="lnamexss" readonly>
+                              </div>
+                          </div>
+                          <div class="col-lg-6">
+                              <div class="mb-3">
+                                  <label class="form-label">Sex</label>
+                                  <select id="sexxs" class="form-select" readonly>
+                                      <option selected></option>
+                                      <option value="Male">Male</option>
+                                      <option value="Female">Female</option>
+                                  </select>
+
+                              </div>
+                          </div>
+                          <div class="col-lg-6">
+                              <div class="mb-3">
+                                  <label class="form-label">Age</label>
+                                  <input type="number" name="age" class="form-control" id="agexss" readonly>
+                              </div>
+                          </div>
+                          <div class="col-lg-6">
+                              <div class="mb-3">
+                                  <label class="form-label">Address</label>
+                                  <input type="text" name="address" class="form-control" id="addressxs" readonly>
+                              </div>
+                          </div>
+                          <div class="col-lg-6">
+                              <div class="mb-3">
+                                  <label class="form-label">Service Availed</label>
+                                  <input type="text" name="serviceavail" class="form-control" id="serviceavailxs" readonly>
+                              </div>
+                          </div>
+                          <div class="col-lg-6">
+                              <div class="mb-3">
+                                  <label class="form-label">Type of Client</label>
+                                  <select id="type-clientxs" class="form-select text-capitalize" disabled>
+                                      <option selected></option>
+                                      <?php
+                                        $sql = "SELECT * FROM type_clients where status = 1";
+                                        $rs = $conn->query($sql);
+                                        foreach ($rs as $row) { ?>
+                                          <option value='<?php echo $row['type_client_id'] ?>'><?php echo $row['client_description'] ?></option>
+                                      <?php } ?>
+                                  </select>
+
+                              </div>
+                          </div>
+                          <div class="col-lg-6">
+                              <div class="mb-3">
+                                  <label class="form-label">Date of Application</label>
+                                  <input type="text" name="datexs" class="form-control" id="datexs"  readonly>
+                              </div>
+                          </div>
+
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                          Cancel
+                      </a>
+                      
+                  </div>
               </form>
           </div>
       </div>

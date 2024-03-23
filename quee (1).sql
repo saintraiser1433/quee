@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Mar 22, 2024 at 11:55 AM
+-- Generation Time: Mar 23, 2024 at 10:31 AM
 -- Server version: 8.2.0
--- PHP Version: 8.2.13
+-- PHP Version: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -78,10 +78,22 @@ CREATE TABLE IF NOT EXISTS `clients` (
   `sex` varchar(100) NOT NULL,
   `age` int NOT NULL,
   `address` varchar(300) NOT NULL,
-  `ticket_no` varchar(100) NOT NULL,
+  `ticket_id` int NOT NULL,
   `type_client_id` int NOT NULL,
+  `date_application` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`client_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `clients`
+--
+
+INSERT INTO `clients` (`client_id`, `first_name`, `last_name`, `sex`, `age`, `address`, `ticket_id`, `type_client_id`, `date_application`) VALUES
+(7, 'fsdfds', 'vcxv', 'Male', 13, 'polomolok south cotabato', 20, 2, '2024-03-23 14:25:06'),
+(6, 'fsdfds', 'vcvc', 'Male', 13, 'polomolok south cotabato', 20, 2, '2024-03-23 14:24:36'),
+(8, 'xvbcb', 'bcvbcv', 'Male', 13, 'polomolok south cotabato', 20, 2, '2024-03-23 14:27:17'),
+(9, 'vcvxc', 'vcxv', 'Male', 13, 'fsdfdsf', 15, 2, '2024-03-23 14:28:09'),
+(10, 'xxx', 'cxzz', 'Male', 13, 'polomolok south cotabato', 18, 2, '2024-03-23 14:31:09');
 
 -- --------------------------------------------------------
 
@@ -150,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   `counter` int NOT NULL,
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ticket_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `tickets`
@@ -170,7 +182,13 @@ INSERT INTO `tickets` (`ticket_id`, `ticket_no`, `service_id`, `status`, `counte
 (11, 'A010', 2, 1, 1, '2024-03-22 13:43:03'),
 (12, 'A011', 2, 1, 1, '2024-03-22 13:43:42'),
 (13, 'A012', 2, 1, 1, '2024-03-22 13:43:51'),
-(14, 'B002', 6, 1, 2, '2024-03-22 13:44:14');
+(14, 'B002', 6, 1, 2, '2024-03-22 13:44:14'),
+(15, 'A001', 2, 0, 1, '2024-03-23 13:52:27'),
+(16, 'B001', 6, 0, 2, '2024-03-23 13:52:30'),
+(17, 'A002', 2, 0, 1, '2024-03-23 13:52:32'),
+(18, 'A003', 2, 0, 1, '2024-03-23 13:52:35'),
+(19, 'A004', 2, 0, 1, '2024-03-23 13:52:38'),
+(20, 'A005', 2, 1, 1, '2024-03-23 13:52:40');
 
 -- --------------------------------------------------------
 
@@ -191,7 +209,9 @@ CREATE TABLE IF NOT EXISTS `ticket_counter` (
 
 INSERT INTO `ticket_counter` (`ticket_number`, `counter`, `counter_date`) VALUES
 ('A012', 1, '2024-03-22 13:39:25'),
-('B002', 2, '2024-03-22 13:39:35');
+('B002', 2, '2024-03-22 13:39:35'),
+('A005', 1, '2024-03-23 13:52:27'),
+('B001', 2, '2024-03-23 13:52:30');
 
 -- --------------------------------------------------------
 

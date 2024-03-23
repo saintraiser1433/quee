@@ -3,6 +3,13 @@ include '../drivers/connection.php';
 if (!isset($_SESSION['auth_id'])) {
   header("Location:../index.php");
 }
+
+if (isset($_GET['stat']) && isset($_GET['stat']) != '') {
+  $stat = $_GET['stat'];
+  $theid = $_GET['tci'];
+  $sql = "UPDATE type_clients SET status = $stat where type_client_id=$theid";
+  $conn->query($sql);
+}
 ?>
 
 <!DOCTYPE html>
@@ -80,9 +87,9 @@ if (!isset($_SESSION['auth_id'])) {
                           <td>
                             <?php
                             if ($rows['status'] == 1) {
-                              echo '<span class="badge badge-sm bg-green text-uppercase ms-auto text-white">Active</span>';
+                              echo " <a href='?stat=0&tci=" . $rows['type_client_id'] . "'><span class='badge badge-sm bg-green text-white text-uppercase ms-auto'>Active</span></a>";
                             } else if ($rows['status'] == 0) {
-                              echo '<span class="badge badge-sm bg-red text-uppercase ms-auto text-white">Inactive</span>';
+                              echo " <a href='?stat=1&tci=" . $rows['type_client_id'] . "'><span class='badge badge-sm bg-red text-white text-uppercase ms-auto'>Inactive</span></a>";
                             }
                             ?>
                           </td>

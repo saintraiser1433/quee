@@ -4,7 +4,7 @@ if (!isset($_SESSION['auth_id'])) {
   header("Location:../index.php");
 }
 $date = date('Y');
-$sql = "SELECT COUNT(*) AS cnt,MONTHNAME(date_borrow) as borrow from return_asset where YEAR(date_borrow)='$date'";
+$sql = "SELECT COUNT(*) AS cnt,MONTHNAME(date_application) as borrow from clients where YEAR(date_application)='$date'";
 $rs = $conn->query($sql);
 $resultArray = array();
 
@@ -69,13 +69,13 @@ $monthData = array_column($resultArray, 'borrow');
                         <div class="col">
                           <div class="font-weight-bold">
                             <?php
-                            $sql = "SELECT COUNT(*) as cnt FROM students";
+                            $sql = "SELECT COUNT(*) as cnt FROM clients";
                             $rs = $conn->query($sql);
                             $row = $rs->fetch_assoc();
-                            echo $row['cnt'];
+                            echo $row['cnt'] ?? 0;
                             ?>
                           </div>
-                          <div class="text-muted">Students</div>
+                          <div class="text-muted">Clients</div>
                         </div>
                       </div>
                     </div>
@@ -99,13 +99,13 @@ $monthData = array_column($resultArray, 'borrow');
                         <div class="col">
                           <div class="font-weight-bold">
                             <?php
-                            $sql = "SELECT COUNT(*) as cnt FROM asset";
+                            $sql = "SELECT COUNT(*) as cnt FROM personnels";
                             $rs = $conn->query($sql);
                             $row = $rs->fetch_assoc();
-                            echo $row['cnt'];
+                            echo $row['cnt'] ?? 0;
                             ?>
                           </div>
-                          <div class="text-muted">Assets</div>
+                          <div class="text-muted">Personnels</div>
                         </div>
                       </div>
                     </div>
@@ -127,13 +127,15 @@ $monthData = array_column($resultArray, 'borrow');
                           </span>
                         </div>
                         <div class="col">
-                          <div class="font-weight-medium"> <?php
-                                                            $sql = "SELECT COUNT(*) as cnt FROM categories";
-                                                            $rs = $conn->query($sql);
-                                                            $row = $rs->fetch_assoc();
-                                                            echo $row['cnt'];
-                                                            ?></div>
-                          <div class="text-muted">Category</div>
+                          <div class="font-weight-medium">
+                            <?php
+                            $sql = "SELECT COUNT(*) as cnt FROM services";
+                            $rs = $conn->query($sql);
+                            $row = $rs->fetch_assoc();
+                            echo $row['cnt'] ?? 0;
+                            ?>
+                          </div>
+                          <div class="text-muted">Services</div>
                         </div>
                       </div>
                     </div>
@@ -153,14 +155,15 @@ $monthData = array_column($resultArray, 'borrow');
                           </span>
                         </div>
                         <div class="col">
-                          <div class="font-weight-medium"><?php
-                                                          $sql = "SELECT COUNT(*) as cnt FROM borrow group by student_id";
-                                                          $rs = $conn->query($sql);
-                                                          $row = $rs->fetch_assoc();
-                                                          echo $row['cnt'];
-                                                          ?>
+                          <div class="font-weight-medium">
+                            <?php
+                            $sql = "SELECT COUNT(*) as cnt FROM type_clients";
+                            $rs = $conn->query($sql);
+                            $row = $rs->fetch_assoc();
+                            echo $row['cnt'] ?? 0;
+                            ?>
                           </div>
-                          <div class="text-muted">Borrower</div>
+                          <div class="text-muted">Type of Clients</div>
                         </div>
                       </div>
                     </div>
@@ -171,7 +174,7 @@ $monthData = array_column($resultArray, 'borrow');
             <div class="col-lg-12">
               <div class="card">
                 <div class="card-body">
-                  <h3 class="card-title">Return Items Per Month</h3>
+                  <h3 class="card-title">Monthly Successfully Client Cater</h3>
                   <div id="chart-mentions" class="chart-lg"></div>
                 </div>
               </div>
@@ -222,7 +225,7 @@ $monthData = array_column($resultArray, 'borrow');
             opacity: 1,
           },
           series: [{
-              name: "Returned",
+              name: "Cater",
               data: cntData,
             },
 

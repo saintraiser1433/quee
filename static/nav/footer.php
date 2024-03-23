@@ -8,7 +8,7 @@
                 <ul class="list-inline list-inline-dots mb-0">
                     <li class="list-inline-item">
                         Copyright &copy; 2023
-                        <a href="." class="link-secondary">Borrow System</a>. All rights
+                        <a href="." class="link-secondary">Queeing System</a>. All rights
                         reserved.
                     </li>
                     <li class="list-inline-item">
