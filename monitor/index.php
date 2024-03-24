@@ -95,9 +95,9 @@ include '../drivers/connection.php';
           <div class="row">
             <div class="col-lg-12">
               <div class="mb-3 d-flex justify-content-center align-items-center gap-5 text-secondary">
-                <h1><img src="../static/images/calendar.png"> Jan 01, 2023</h1>
-                <h1><img src="../static/images/sun.png"> Sunday</h1>
-                <h1><img src="../static/images/clock.png"> 12:34 PM</h1>
+                <h1><img src="../static/images/calendar.png">  <?php echo date("M d, Y"); ?></h1>
+                <h1><img src="../static/images/sun.png">  <?php echo date('l') ?></h1>
+                <h1><img src="../static/images/clock.png"> <span id="current-time"></span></h1>
               </div>
               <div>
                 <video controls loop>
@@ -125,6 +125,30 @@ include '../drivers/connection.php';
 </body>
 
 </html>
+<script>
+  function updateTime() {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    const formattedHours = hours % 12 || 12; // Convert to 12-hour format
+    const formattedTime = `${formattedHours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds} ${ampm}`;
+
+    $('#current-time').html(formattedTime)
+  }
+
+
+
+
+
+
+
+  updateTime();
+
+  setInterval(updateTime, 1000);
+</script>
 <style>
   .typo {
     font-weight: bold;
@@ -162,11 +186,11 @@ include '../drivers/connection.php';
         url: "../ajax/monitorques.php",
         dataType: 'json',
         success: function(res) {
-          let cnt1 = res.cnt1 ?? 'A000';
-          let cnt2 = res.cnt2 ?? 'B000';
-          let cnt3 = res.cnt3 ?? 'C000';
-          let cnt4 = res.cnt4 ?? 'D000';
-          let cnt5 = res.cnt5 ?? 'E000';
+          let cnt1 = res.cnt1 ?? 'XXXX';
+          let cnt2 = res.cnt2 ?? 'XXXX';
+          let cnt3 = res.cnt3 ?? 'XXXX';
+          let cnt4 = res.cnt4 ?? 'XXXX';
+          let cnt5 = res.cnt5 ?? 'XXXX';
           if (res.length == 0) {
             $('#personnel1').html('A000');
             $('#personnel2').html('B000');

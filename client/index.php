@@ -7,17 +7,20 @@
 <body>
   <div class="page">
     <!-- Navbar -->
-    <?php include '../static/nav/topbar.php' ?>
     <div class="page-wrapper">
       <!-- Page header -->
       <!-- Page body -->
-      <div class="page-body">
+      <div class="page-body my-auto">
         <div class="container-xl">
           <div class="card">
             <div class="card-body">
-              <div class="d-flex justify-content-center">
-                <h1>LOREM IPSUM COMPANY</h1>
+              <div class="d-flex justify-content-center mb-5 align-items-center gap-2">
+                <img src="../static/images/logo/<?php echo $companyLogox ?>">
+                <h1 class="text-uppercase"><?php echo $companyNamex ?></h1>
+
               </div>
+              <hr>
+              <h1 class="text-center text-primary"><U>Select Services</U></h1>
               <div class="row">
                 <?php
                 $sql = "SELECT
@@ -73,6 +76,9 @@
 
 
   <script>
+    let servicetitle = "";
+    let ticketNo = "";
+
     function service(id, title, counter) {
       swal({
           title: "Are you sure?",
@@ -91,6 +97,8 @@
                 counter: counter
               },
               success: function(html) {
+                servicetitle = title;
+                ticketNo = html;
                 $('#modal-ticket').modal('show');
                 $('.ticketFont').html('#' + html);
               }
@@ -103,7 +111,33 @@
           }
         });
     }
+
+
+    $(document).ready(function() {
+
+      $(document).on('click', '.print', function() {
+        $.ajax({
+          url: "../ajax/generate-ticket.php",
+          method: "POST",
+          data: {
+            servicetitle: servicetitle,
+            ticketNo: ticketNo,
+          },
+          success: function(html) {
+            setInterval(function() {
+              window.location.href = '../static/report/output/ticket.pdf';
+            }, 1000);
+          }
+        })
+      });
+
+
+
+
+    });
   </script>
+
+
 </body>
 
 </html>

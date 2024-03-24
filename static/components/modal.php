@@ -355,6 +355,69 @@
       </div>
   </div>
 
+  <!-- modal settings -->
+  <div class="modal modal-blur fade" id="modal-settings" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">Settings</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="saveSettings.php" method="post" enctype="multipart/form-data">
+                  <div class="modal-body">
+                      <?php
+                        $sqlxm = "SELECT * FROM settings";
+                        $rsxx = $conn->query($sqlxm);
+
+
+                        if ($rsxx->num_rows > 0) {
+                            $rowxx = $rsxx->fetch_assoc();
+                            $companyName = $rowxx['company_name'];
+                            $marquee = $rowxx['marquee_text'];
+                        } else {
+                            $companyName = "";
+                            $marquee = "";
+                        }
+
+                        ?>
+                      <div class="row">
+                          
+                          <div class="col-lg-12">
+                              <div class="mb-3">
+                                  <label class="form-label">Company Name</label>
+                                  <input type="text" name="companyname" class="form-control" id="company_name" value="<?php echo $companyName ?>" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label class="form-label">Upload Logo</label>
+                                  <input type="file" name="files" id="filer_input_single" class="form-control filex" required />
+                              </div>
+                             
+                              <div class="mb-3">
+                                  <label class="form-label">Marquee text (In monitor side)</label>
+                                  <textarea class="form-control" name="marquee" id="marquee" rows="5"><?php echo $marquee ?></textarea>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                          Cancel
+                      </a>
+                      <button type="submit" class="btn btn-primary ms-auto" name="submit">
+                          <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                              <path d="M12 5l0 14" />
+                              <path d="M5 12l14 0" />
+                          </svg>
+                          Save
+                      </button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+
 
   <!-- modal for client details -->
   <div class="modal modal-blur fade" id="modal-client-detail" data-bs-backdrop='static' data-bs-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
@@ -426,7 +489,7 @@
                           <div class="col-lg-6">
                               <div class="mb-3">
                                   <label class="form-label">Date of Application</label>
-                                  <input type="text" name="datexs" class="form-control" id="datexs"  readonly>
+                                  <input type="text" name="datexs" class="form-control" id="datexs" readonly>
                               </div>
                           </div>
 
@@ -436,7 +499,7 @@
                       <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
                           Cancel
                       </a>
-                      
+
                   </div>
               </form>
           </div>

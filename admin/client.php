@@ -34,7 +34,7 @@ if (!isset($_SESSION['auth_id'])) {
             <div class="card-body">
               <div id="listjs">
                 <div class="d-flex align-items-center justify-content-end">
-                 
+
                   <div class="flex-shrink-0">
                     <input class="form-control listjs-search" id="search-input" placeholder="Search" style="max-width: 200px;" />
                   </div>
@@ -148,6 +148,7 @@ if (!isset($_SESSION['auth_id'])) {
 
   <script>
     $(document).ready(function() {
+
       $(document).on('click', '.detail', function(e) {
 
         $tr = $(this).closest('tr');

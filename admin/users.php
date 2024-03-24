@@ -157,6 +157,7 @@ if (!isset($_SESSION['auth_id'])) {
 
   <script>
     $(document).ready(function() {
+
       var assignServiceSelect;
       let id = null;
       var el;

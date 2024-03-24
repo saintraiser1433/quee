@@ -162,7 +162,7 @@ if (isset($_GET['stat']) && isset($_GET['stat']) != '') {
     $(document).ready(function() {
       let id = null;
 
-
+     
       $(document).on('click', '.edit', function() {
         $('#modal-typeclients').modal('show');
         $tr = $(this).closest('tr');

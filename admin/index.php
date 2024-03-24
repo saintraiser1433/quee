@@ -185,16 +185,31 @@ $monthData = array_column($resultArray, 'borrow');
       <?php include '../static/nav/footer.php' ?>
     </div>
   </div>
-
+  <?php include '../static/components/modal.php'; ?>
   <!-- Libs JS -->
   <script src="../dist/libs/apexcharts/dist/apexcharts.min.js?1684106062" defer></script>
 
-  <!-- Tabler Core -->
-  <script src="../dist/js/tabler.min.js?1684106062" defer></script>
-  <script src="../dist/js/demo.min.js?1684106062" defer></script>
+  <?php include '../static/nav/scripts.php' ?>
+
+  <?php
+  if (isset($_SESSION['response']) && $_SESSION['response'] != "") {
+
+  ?>
+    <script>
+      swal({
+        title: "<?php echo $_SESSION['response']; ?>",
+        icon: "<?php echo $_SESSION['type']; ?>",
+        button: "Exit!",
+      })
+    </script>
+  <?php unset($_SESSION['response']);
+  }
+  ?>
+
 
   <script>
     // @formatter:off
+
     document.addEventListener("DOMContentLoaded", function() {
       var cntData = <?php echo json_encode($cntData); ?>;
       var monthData = <?php echo json_encode($monthData); ?>;
@@ -275,6 +290,8 @@ $monthData = array_column($resultArray, 'borrow');
           },
         }).render();
     });
+
+
     // @formatter:on
   </script>
 

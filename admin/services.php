@@ -174,6 +174,7 @@ if (isset($_GET['stat']) && isset($_GET['stat']) != '') {
         reader.readAsDataURL(input.files[0]);
       }
     }
+
     $(document).ready(function() {
       let id = null;
       $(document).on('click', '#upload', function() {

@@ -124,6 +124,8 @@ if (!isset($_SESSION['auth_id'])) {
 
   <script>
     $(document).ready(function() {
+
+  
       $(document).on('click', '.edit', function() {
         $('#modal-add').modal('show');
         $tr = $(this).closest('tr');
